@@ -9,6 +9,9 @@ const int M2 = 7;
 
 #define trigPin 2
 #define echoPin 3
+//#define trigPin A5
+//#define echoPin A4
+const int obstacle_pin = 8;
 
 class RF24Test: public RF24
 {
@@ -22,8 +25,9 @@ const uint64_t pipes[2] = { 0xF0F0F0F0E1LL, 0xF0F0F0F0D2LL };
 
 void setup()
 {
-  Serial.begin(57600);
+  Serial.begin(9600);
   Serial.println("Starting car.");
+  pinMode(obstacle_pin, OUTPUT);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   radio.begin();  
@@ -64,10 +68,14 @@ void loop()
         byte turnValue = transmission[0];
         
         if (obstacle()) 
+        {
 //          speed(128);   //This will stop the motor from spinning
           speed(speedValue, true);          
+        }
         else
+        {
           speed(speedValue, false);
+        }
 
         turn(turnValue);
  
@@ -82,7 +90,7 @@ void loop()
       // Send the final one back.
       byte response = B0;
       radio.write( &response, sizeof(response) );
-      Serial.println("Sent response.");
+//      Serial.println("Sent response.");
 
       // Now, resume listening so we catch the next packets.
       radio.startListening();
@@ -97,7 +105,7 @@ void speed(byte speedValue, bool obstacle)
   if (speedValue < 127)
          {
             int mappedVal = map(speedValue,0,126,0,255);
-            //Going forward
+            //Going reverse
             Serial.print(mappedVal);
             Serial.print(" - ");
             Serial.println(255-mappedVal);
@@ -106,7 +114,7 @@ void speed(byte speedValue, bool obstacle)
             delay(10); 
          } else if (speedValue > 129 && !obstacle )
          {
-            //Going backward
+            //Going forward
 //            int mappedVal = map(speedValue-128,0,255,0,255);
             int mappedVal = map(speedValue,130,255,0,255);
             Serial.print(mappedVal);
@@ -117,6 +125,7 @@ void speed(byte speedValue, bool obstacle)
             delay(10); 
          } else
          {
+             Serial.println("Obstacle - stopping");
              digitalWrite(M1,LOW); 
              analogWrite(E1, 0);
          }
@@ -159,13 +168,15 @@ boolean obstacle()
   distance = (duration/2) / 29.1;
 
   if (distance >= 30 || distance <= 0){
-    Serial.println("Out of range");
+    Serial.println("No obstacle");
+    digitalWrite(obstacle_pin,LOW);
     return false;
   }
   else {
-    Serial.print("DANGER! ");
+//    Serial.print("DANGER! ");
     Serial.print(distance);
     Serial.println(" cm");
+    digitalWrite(obstacle_pin,HIGH);
     return true;
   }
 }
