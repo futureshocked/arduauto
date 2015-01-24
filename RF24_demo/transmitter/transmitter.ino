@@ -4,7 +4,8 @@
 
 #define BAUDRATE 57600
 
-const int led_pin = 13;
+const int led_pin = 8;
+const char* message = "A";
 
 class RF24Test: public RF24
 {
@@ -27,8 +28,7 @@ void setup()
 }
 
 void loop()
-{ 
-    char message = "A";
+{  
     radio.stopListening();
     radio.write( &message, 1 );
     // Now, continue listening

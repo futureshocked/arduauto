@@ -6,7 +6,7 @@
 
 #define BAUDRATE 57600
 
-const int led_pin = 13;
+const int led_pin = 8;
 
 ArduinoNunchuk nunchuk = ArduinoNunchuk();
 
