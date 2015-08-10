@@ -1,3 +1,5 @@
+//Transmitter
+
 #include <SPI.h>
 #include "nRF24L01.h"
 #include "RF24.h"
@@ -5,7 +7,7 @@
 #define BAUDRATE 57600
 
 const int led_pin = 8;
-const char* message = "A";
+char message = 'A';
 
 class RF24Test: public RF24
 {
@@ -30,6 +32,9 @@ void setup()
 void loop()
 {  
     radio.stopListening();
+    Serial.print("Sending:");
+    Serial.print(message);
+     Serial.print(" ");
     radio.write( &message, 1 );
     // Now, continue listening
     radio.startListening();
@@ -52,6 +57,7 @@ void loop()
       // Grab the response, compare, and send to debugging spew
       byte response;
       radio.read( &response, sizeof(response) );
+      Serial.print("Transmitter. Received response from receiver:");
       Serial.println(response,BIN);
       
       if (response == B0) 

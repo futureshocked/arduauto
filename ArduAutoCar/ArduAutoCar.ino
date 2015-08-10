@@ -9,8 +9,7 @@ const int M2 = 7;
 
 #define trigPin 2
 #define echoPin 3
-//#define trigPin A5
-//#define echoPin A4
+
 const int obstacle_pin = 8;
 
 class RF24Test: public RF24
@@ -90,7 +89,6 @@ void loop()
       // Send the final one back.
       byte response = B0;
       radio.write( &response, sizeof(response) );
-//      Serial.println("Sent response.");
 
       // Now, resume listening so we catch the next packets.
       radio.startListening();

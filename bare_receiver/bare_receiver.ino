@@ -22,6 +22,7 @@ void setup()
   radio.openReadingPipe(1,pipes[0]);
   
   radio.startListening();
+  Serial.println("Listening...");
 }
 
 void loop()
