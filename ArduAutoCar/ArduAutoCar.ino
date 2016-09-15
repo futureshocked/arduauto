@@ -94,7 +94,7 @@ void loop()
       radio.startListening();
     } else 
   {
-    //speed(128); //If there is no contact with the controller, stop the car
+    //speed(128, false); //If there is no contact with the controller, stop the car
   }  
 }
 
