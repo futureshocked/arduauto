@@ -10,7 +10,9 @@ const int M2 = 7;
 #define trigPin 2
 #define echoPin 3
 
-const int obstacle_pin = 8;
+const int obstacle_pin = 8; // Use this pin to connect an LED. If an obstacle is detected, the LED will turn on.
+                            // Beware that I have not shown this connection in the schematic, it is simply here for
+                            // debugging.
 
 class RF24Test: public RF24
 {
