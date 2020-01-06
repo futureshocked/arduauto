@@ -14,12 +14,7 @@ const int obstacle_pin = 8; // Use this pin to connect an LED. If an obstacle is
                             // Beware that I have not shown this connection in the schematic, it is simply here for
                             // debugging.
 
-class RF24Test: public RF24
-{
-public: RF24Test(int a, int b): RF24(a,b) {}
-};
-
-RF24Test radio(9,10);
+RF24 radio(9, 10);
 
 // Radio pipe addresses for the 2 nodes to communicate.
 const uint64_t pipes[2] = { 0xF0F0F0F0E1LL, 0xF0F0F0F0D2LL };
@@ -43,11 +38,11 @@ void loop()
     if ( radio.available() )
     {
       byte transmission[7];
-      bool done = false;
-      while (!done)
-      {
-        // Fetch the payload, and see if this was the last one.
-        done = radio.read( &transmission, 7 );
+
+        // Fetch the payload
+        while (radio.available()) {
+          radio.read( &transmission, sizeof(transmission));
+        }
 
         // Spew it
         Serial.print(transmission[0]);
@@ -80,10 +75,10 @@ void loop()
 
         turn(turnValue);
  
-	// Delay just a little bit to let the other unit
-	// make the transition to receiver
-	delay(10);
-      }
+  // Delay just a little bit to let the other unit
+  // make the transition to receiver
+  delay(10);
+      
 
       // First, stop listening so we can talk
       radio.stopListening();
