@@ -4,29 +4,24 @@
 #include "nRF24L01.h"
 #include "RF24.h"
 
-#define BAUDRATE 57600
-
 const int led_pin = 8;
 char message = 'A';
 
-class RF24Test: public RF24
-{
-public: RF24Test(int a, int b): RF24(a,b) {}
-};
-
-RF24Test radio(9,10);
+RF24 radio(9,10);
 
 // Radio pipe addresses for the 2 nodes to communicate.
 const uint64_t pipes[2] = { 0xF0F0F0F0E1LL, 0xF0F0F0F0D2LL };
 
 void setup()
 {
-  Serial.begin(BAUDRATE);
+  Serial.begin(9600);
+  Serial.println("Starting radio...");
 
   radio.begin();
   radio.openWritingPipe(pipes[0]);
   radio.openReadingPipe(1,pipes[1]);  
-  radio.printDetails();
+  Serial.println("Radio started...");
+
 }
 
 void loop()
@@ -34,8 +29,9 @@ void loop()
     radio.stopListening();
     Serial.print("Sending:");
     Serial.print(message);
-     Serial.print(" ");
+    Serial.print(" ");
     radio.write( &message, 1 );
+    
     // Now, continue listening
     radio.startListening();
 
