@@ -10,12 +10,7 @@ const int led_pin = 13;
 
 ArduinoNunchuk nunchuk = ArduinoNunchuk();
 
-class RF24Test: public RF24
-{
-public: RF24Test(int a, int b): RF24(a,b) {}
-};
-
-RF24Test radio(9,10);
+RF24 radio(9, 10);
 
 // Radio pipe addresses for the 2 nodes to communicate.
 const uint64_t pipes[2] = { 0xF0F0F0F0E1LL, 0xF0F0F0F0D2LL };
@@ -28,7 +23,7 @@ void setup()
   radio.begin();  
   radio.openWritingPipe(pipes[0]);
   radio.openReadingPipe(1,pipes[1]);  
-  radio.printDetails();
+  
 }
 
 void loop()
